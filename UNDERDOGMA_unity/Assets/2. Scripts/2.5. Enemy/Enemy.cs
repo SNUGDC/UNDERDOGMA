@@ -85,7 +85,7 @@ public abstract class Enemy : MonoBehaviour, IEnemyAttributesSetter, IEnemyPosit
                     transform.DOMove(new Vector2(Row, Col) + new Vector2(-0.07f, 0.35f), 0.3f, false)
                 );
 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Enemy_Attack);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Enemy_Attack);
 
         yield return new WaitForSeconds(0.65f);
 

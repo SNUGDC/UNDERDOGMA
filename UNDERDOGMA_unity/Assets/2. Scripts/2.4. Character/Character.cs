@@ -201,7 +201,7 @@ public class Character : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Reset);
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Reset);
             ChangeState(State.Reset);
         }
 
@@ -406,7 +406,7 @@ public class Character : MonoBehaviour
     {
         _isCharacterCoroutineRunning = true;
 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Eat);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Eat);
 
         Sequence CharacterAttackSequence = DOTween.Sequence();
 
@@ -502,7 +502,7 @@ public class Character : MonoBehaviour
         _isCharacterExecutionCoroutineRunning = true;
 
         // 1. 처형 효과음 재생.
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Execute);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Execute);
 
         // 2. 처형 애니메이션 재생. 
         Sequence ExecutionEffectSequence = DOTween.Sequence();
@@ -546,7 +546,7 @@ public class Character : MonoBehaviour
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<RectTransform>()
                     .DOLocalMove(SetPositionSpriteToUI(enemy.Key.x, enemy.Key.y), 0.0f, false)
                 )
-                .AppendCallback(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.Enemy_Attack))
+                .AppendCallback(() => SoundManager.Instance.PlaySfx(SoundManager.Sfx.Enemy_Attack))
                 .Append(
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<UnityEngine.UI.Image>()
                     .DOFade(1.0f, 0.05f)
@@ -572,7 +572,7 @@ public class Character : MonoBehaviour
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<RectTransform>()
                     .DORotate(new Vector3(0.0f, 0.0f, 90.0f), 0.0f)
                 )
-                .AppendCallback(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.Enemy_Attack))
+                .AppendCallback(() => SoundManager.Instance.PlaySfx(SoundManager.Sfx.Enemy_Attack))
                 .Append(
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<UnityEngine.UI.Image>()
                     .DOFade(1.0f, 0.05f)
@@ -598,7 +598,7 @@ public class Character : MonoBehaviour
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<RectTransform>()
                     .DOLocalMove(SetPositionSpriteToUI(enemy.Key.x, enemy.Key.y), 0.0f, false)
                 )
-                .AppendCallback(() => AudioManager.Instance.PlaySfx(AudioManager.Sfx.Enemy_Attack))
+                .AppendCallback(() => SoundManager.Instance.PlaySfx(SoundManager.Sfx.Enemy_Attack))
                 .Append(
                     ExecutionManager.Instance.ExecutionClawObjectList[count].GetComponent<UnityEngine.UI.Image>()
                     .DOFade(1.0f, 0.05f)
@@ -626,7 +626,7 @@ public class Character : MonoBehaviour
         _isCharacterCoroutineRunning = true;
 
         // 2. 사운드를 재생한다. 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Eat);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Eat);
 
         // 3. 애니메이션을 재생한다.  
         GetComponent<Animator>().SetBool("IsAttack", true);
@@ -651,7 +651,7 @@ public class Character : MonoBehaviour
         _isCharacterCoroutineRunning = true;
 
         // ToDo: Kick 소리 찾으면 변경 필요. 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Eat);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Eat);
 
         // 캐릭터가 공격하는 애니메이션 재생.
         GetComponent<Animator>().SetBool("IsAttack", true);

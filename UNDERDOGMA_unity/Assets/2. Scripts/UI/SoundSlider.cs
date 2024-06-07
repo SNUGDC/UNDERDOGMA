@@ -11,19 +11,19 @@ public class SoundSlider : MonoBehaviour
     [SerializeField] private Slider sfxSlider;
     public void Start()
     {
-        bgmSlider.value = AudioManager.Instance.bgmVolume/MaxBgmVolume;
-        sfxSlider.value = AudioManager.Instance.sfxVolume/MaxSfxVolume;
+        bgmSlider.value = SoundManager.Instance.bgmVolume / MaxBgmVolume;
+        sfxSlider.value = SoundManager.Instance.sfxVolume / MaxSfxVolume;
         bgmSlider.onValueChanged.AddListener(delegate { BgmValueChangeCheck(); });
         sfxSlider.onValueChanged.AddListener(delegate { SfxValueChangeCheck(); });
     }
 
     public void BgmValueChangeCheck()
     {
-        AudioManager.Instance.ModifyBgmVolume(bgmSlider.value * MaxBgmVolume);
+        SoundManager.Instance.ModifyBgmVolume(bgmSlider.value * MaxBgmVolume);
     }
 
-    public void SfxValueChangeCheck() 
+    public void SfxValueChangeCheck()
     {
-        AudioManager.Instance.ModifySfxVolume(sfxSlider.value * MaxSfxVolume);
+        SoundManager.Instance.ModifySfxVolume(sfxSlider.value * MaxSfxVolume);
     }
 }

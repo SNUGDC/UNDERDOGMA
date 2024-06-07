@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Tracing;
+using Steamworks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,6 +14,13 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] GameObject StageManagerPrefab;
     [SerializeField] GameObject ExecutionPrefab;
     [SerializeField] GameObject DialogueManagerPrefab;
+
+    private int saveFileNum = 0;
+    public int SaveFileNum
+    {
+        get => saveFileNum;
+        set => saveFileNum = value;
+    }
 
     private int world = 1;
     public int World
@@ -45,6 +53,8 @@ public class GameManager : Singleton<GameManager>
     public bool FromStageSelector = false;
     public bool FromMapEditor = false;
 
+    public Achievement[] achievements;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -55,6 +65,14 @@ public class GameManager : Singleton<GameManager>
         // 다이얼로그 테이블을 불러온다.
         _dialogueDataTable = new DialogueDataTable("DialogueDataTable");
         _dialogueDataTable.LoadCsv("언더독 다이얼로그 및 번역 테이블 - 다이얼로그 시트.csv");
+
+        if (SteamManager.Initialized)
+        {
+            AchievementManager achievementManager = new AchievementManager();
+            achievementManager.achievements = achievements;
+
+            SteamAchievements.Instance.SetAchievements(achievements);
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -62,15 +80,9 @@ public class GameManager : Singleton<GameManager>
         SetResolution();
     }
 
-    public void Init()
+    public void Update()
     {
-
-    }
-
-    // 스테이지를 시작하면 stageManager, executionManager, dialogueManager를 생성한다.
-    public void StageInit()
-    {
-
+        SteamAPI.RunCallbacks();
     }
 
     /* 해상도 설정하는 함수 */

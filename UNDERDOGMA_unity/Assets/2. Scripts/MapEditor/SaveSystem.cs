@@ -144,7 +144,7 @@ public class SaveSystem : Singleton<SaveSystem>
         if (File.Exists(path))
         {
             GameManager.Instance.FromMapEditor = true;
-            LoadingManager.Instance.LoadStage(stage / 100, stage % 100);
+            LoadingManager.Instance.LoadScene("Stage", false, false, stage / 100, stage % 100);
         }
         else
         {

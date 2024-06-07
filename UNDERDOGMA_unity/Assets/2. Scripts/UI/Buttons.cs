@@ -51,9 +51,9 @@ public class Buttons : MonoBehaviour
         SceneManager.LoadScene("Credit");
     }
 
-    public void GoToTutorial()
+    public void GoToLoadGameScene()
     {
-        SceneManager.LoadScene("Tutorial");
-        AudioManager.Instance.Destroy();
+        SceneManager.LoadScene("LoadGameScene");
+        SoundManager.Instance.Destroy();
     }
 }

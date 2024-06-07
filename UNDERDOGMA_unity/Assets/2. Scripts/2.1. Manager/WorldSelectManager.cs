@@ -98,7 +98,7 @@ public class WorldSelectManager : MonoBehaviour
             SetWorldImages();
         }
 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UI_Toggle);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.UI_Toggle);
     }
 
     public void IndexPlus()
@@ -109,7 +109,7 @@ public class WorldSelectManager : MonoBehaviour
             SetWorldImages();
         }
 
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UI_Toggle);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.UI_Toggle);
     }
 
     public void SetWorldImages()
@@ -142,6 +142,6 @@ public class WorldSelectManager : MonoBehaviour
             GameManager.Instance.World = 2;
             SceneManager.LoadScene("World2");
         }
-        AudioManager.Instance.PlaySfx(AudioManager.Sfx.UI_Toggle);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.UI_Toggle);
     }
 }

@@ -24,14 +24,56 @@ public class LoadingManager : Singleton<LoadingManager>
         DontDestroyOnLoad(this.gameObject);
     }
 
-    // 스테이지가 아닌 씬에서 스테이지 씬으로 이동하는 함수. 
-    public void LoadStage(int world, int stage)
+    // 다른 씬으로 이동하는 함수. 
+    public void LoadScene(string sceneName, bool gameDataSaving, bool achievementDataSaving, int world = -1, int stage = -1)
     {
-        GameManager.Instance.World = world;
-        GameManager.Instance.Stage = stage;
+        // 만약 스테이지로 들어가는 경우 어느 world와 stage인지를 설정해준다.
+        if (world != -1 && stage != -1)
+        {
+            GameManager.Instance.World = world;
+            GameManager.Instance.Stage = stage;
+        }
 
         // Stage 씬으로 이동하고,
-        StartCoroutine(LoadSceneAsync("Stage", world, stage));
+        StartCoroutine(LoadSceneAsync(sceneName, world, stage, gameDataSaving, achievementDataSaving));
+    }
+
+    private IEnumerator LoadSceneAsync(string sceneName, int world, int stage,
+                                        bool gameDataSaving, bool achievementDataSaving)
+    {
+        // 1. 비동기적으로 Scene을 로드합니다.
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        // 2. 만약 게임 데이터를 저장해야 한다면 저장합니다.
+        if (gameDataSaving)
+            DataManager.Instance.SaveGameData(GameManager.Instance.SaveFileNum);
+
+        // 3. 만약 업적 데이터를 저장해야 한다면 저장합니다.
+        if (achievementDataSaving)
+            DataManager.Instance.SaveAchievementData(GameManager.Instance.SaveFileNum);
+
+        // 4. Scene 로드가 완료될 때까지 대기합니다.
+        while (!asyncLoad.isDone)
+        {
+            // 로드 진행률을 확인하거나 다른 작업을 수행할 수 있습니다.
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f); // progress 값은 0.0에서 0.9 사이입니다.
+
+            // 다음 프레임까지 대기합니다.
+            yield return null;
+        }
+
+        // 5. 만약 스테이지로 들어가는 경우, StageManager, ExecutionManager, DialogueManager를 생성해준다.
+        if (world != -1 && stage != -1)
+        {
+            stageManager = Instantiate(StageManagerPrefab);
+            executionManager = Instantiate(ExecutionPrefab);
+            dialogueManager = Instantiate(DialogueManagerPrefab);
+
+            InitManagers(world, stage);
+        }
+
+        // 6. 로딩이 끝나고 해상도를 설정해준다.
+        GameManager.Instance.SetResolution();
     }
 
     // 스테이지에서 다른 스테이지로 이동하는 함수.
@@ -42,31 +84,6 @@ public class LoadingManager : Singleton<LoadingManager>
         GameManager.Instance.Stage = nextStage;
 
         InitManagers(nextWorld, nextStage);
-    }
-
-    private IEnumerator LoadSceneAsync(string sceneName, int world, int stage)
-    {
-        // 비동기적으로 Scene을 로드합니다.
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-
-        // Scene 로드가 완료될 때까지 대기합니다.
-        while (!asyncLoad.isDone)
-        {
-            // 로드 진행률을 확인하거나 다른 작업을 수행할 수 있습니다.
-            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f); // progress 값은 0.0에서 0.9 사이입니다.
-
-            // 다음 프레임까지 대기합니다.
-            yield return null;
-        }
-
-        stageManager = Instantiate(StageManagerPrefab);
-        executionManager = Instantiate(ExecutionPrefab);
-        dialogueManager = Instantiate(DialogueManagerPrefab);
-
-        InitManagers(world, stage);
-
-        // 로딩이 끝나고 해상도를 설정해준다.
-        GameManager.Instance.SetResolution();
     }
 
     private void InitManagers(int world, int stage)

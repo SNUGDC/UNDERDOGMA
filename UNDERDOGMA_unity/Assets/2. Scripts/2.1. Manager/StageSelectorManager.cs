@@ -25,7 +25,7 @@ public class StageSelectorManager : MonoBehaviour
         if (File.Exists(path))
         {
             GameManager.Instance.FromStageSelector = true;
-            LoadingManager.Instance.LoadStage(stage / 100, stage % 100);
+            LoadingManager.Instance.LoadScene("Stage", false, false, stage / 100, stage % 100);
         }
         else
         {
