@@ -7,6 +7,34 @@ using Newtonsoft.Json.Converters;
 
 public class GameData
 {
+    [JsonIgnore] private int _highestWorldCleared;
+    public int HighestWorldCleared
+    {
+        get => _highestWorldCleared;
+        set => _highestWorldCleared = value;
+    }
+
+    [JsonIgnore] private int _playTime;
+    public int PlayTime
+    {
+        get => _playTime;
+        set => _playTime = value;
+    }
+
+    [JsonIgnore] private List<int> _normalStageCleared;
+    public List<int> NormalStageCleared
+    {
+        get => _normalStageCleared;
+        set => _normalStageCleared = value;
+    }
+
+    [JsonIgnore] private List<int> _hardStageCleared;
+    public List<int> HardStageCleared
+    {
+        get => _hardStageCleared;
+        set => _hardStageCleared = value;
+    }
+
     // 현재 무슨 챕터인지를 저장하는 변수. 월드맵과 같은 말이다. 
     [JsonIgnore] private int _currentWorld;
     public int CurrentWorld
@@ -14,6 +42,7 @@ public class GameData
         get => _currentWorld;
         set => _currentWorld = value;
     }
+
     [JsonIgnore] private int _currentStage;
     public int CurrentStage
     {
@@ -21,10 +50,14 @@ public class GameData
         set => _currentStage = value;
     }
 
-    public GameData(int currentWorld, int currentStage)
+    public GameData(int highestWorldCleared, int playTime, List<int> normalStageCleared, List<int> hardStageCleared, int currentWorld, int currentStage)
     {
-        this._currentWorld = currentWorld;
-        this._currentStage = currentStage;
+        _highestWorldCleared = highestWorldCleared;
+        _playTime = playTime;
+        _normalStageCleared = normalStageCleared;
+        _hardStageCleared = hardStageCleared;
+        _currentWorld = currentWorld;
+        _currentStage = currentStage;
     }
 }
 

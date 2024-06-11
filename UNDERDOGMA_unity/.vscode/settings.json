@@ -3,5 +3,6 @@
   "better-comments.multilineComments": true,
   "editor.tokenColorCustomizations": {
     "comments": "#ff00dd"
-},
+  },
+  "dotnet.defaultSolution": "UNDERDOGMA_unity.sln"
 }
