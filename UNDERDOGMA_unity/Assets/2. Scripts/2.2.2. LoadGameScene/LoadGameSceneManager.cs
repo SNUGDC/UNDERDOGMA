@@ -1,11 +1,9 @@
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;
 using DG.Tweening;
 
 // 게임 시작을 누른 후, 세이브 파일을 선택하는 메뉴에 관한 스크립트. 
@@ -16,8 +14,17 @@ public class LoadGameSceneManager : MonoBehaviour
     [SerializeField] private List<SaveFileButton> SaveFileButtons;
 
     [SerializeField] private Button ReturnToTitleButton;
+    [SerializeField] private GameObject Cursor;
 
     private int selectedSaveFileNum;
+    private List<Vector3> cursorPositions = new List<Vector3>
+    {
+        new Vector3(-502, 220, 0),
+        new Vector3(0, 220, 0),
+        new Vector3(502, 220, 0)
+    };
+
+    private bool isCursorOnDeleteButton = false;
 
     void Start()
     {
@@ -56,6 +63,68 @@ public class LoadGameSceneManager : MonoBehaviour
         ReturnToTitleButton.onClick.AddListener(returnToTitle);
 
         selectedSaveFileNum = -1;
+        Cursor.transform.position = cursorPositions[0];
+
+        SaveFileButtons[0].ToggleDeleteMenu(true);
+        SaveFileButtons[1].ToggleDeleteMenu(false);
+        SaveFileButtons[2].ToggleDeleteMenu(false);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            if (selectedSaveFileNum > 0)
+            {
+                if (isCursorOnDeleteButton == true)
+                {
+                    isCursorOnDeleteButton = false;
+                    SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
+                    SaveFileButtons[selectedSaveFileNum].ToggleDeleteMenu(false);
+                }
+                selectedSaveFileNum--;
+                Cursor.transform.DOMove(cursorPositions[selectedSaveFileNum], 0.2f);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            if (selectedSaveFileNum < 2)
+            {
+                if (isCursorOnDeleteButton == true)
+                {
+                    isCursorOnDeleteButton = false;
+                    SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
+                    SaveFileButtons[selectedSaveFileNum].ToggleDeleteMenu(false);
+                }
+                selectedSaveFileNum++;
+                Cursor.transform.DOMove(cursorPositions[selectedSaveFileNum], 0.2f);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        {
+            isCursorOnDeleteButton = true;
+            SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        {
+            isCursorOnDeleteButton = false;
+            SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (isCursorOnDeleteButton == true)
+            {
+
+            }
+            else
+            {
+                StartGame(selectedSaveFileNum);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            returnToTitle();
+        }
     }
 
     // 기존에 존재하는 게임 데이터를 삭제하는 경우.
