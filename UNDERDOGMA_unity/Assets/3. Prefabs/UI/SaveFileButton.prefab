@@ -166,7 +166,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8625944046240258313}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -509,16 +509,16 @@ RectTransform:
   m_GameObject: {fileID: 8625944046065018211}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8625944046438549485}
   m_Father: {fileID: 8625944046240258313}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 920, y: 0}
+  m_AnchoredPosition: {x: 919.99994, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8625944046065018215
@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 8625944046240258315}
   - component: {fileID: 8625944046240258314}
   - component: {fileID: 8625944046240258317}
+  - component: {fileID: 7027140197359974371}
   m_Layer: 5
   m_Name: SaveFileButton
   m_TagString: Untagged
@@ -639,8 +640,8 @@ RectTransform:
   - {fileID: 4481551937191024511}
   - {fileID: 8625944046568226954}
   - {fileID: 8625944045540217871}
-  - {fileID: 8625944046065018212}
   - {fileID: 6057118761524404008}
+  - {fileID: 8625944046065018212}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -745,6 +746,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChapterText: {fileID: 8625944046568226955}
   PlayTime: {fileID: 8625944045540217968}
+  ConnectBar: {fileID: 2190874074712505445}
+  DeleteButton: {fileID: 8625944046065018213}
+--- !u!61 &7027140197359974371
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625944046240258312}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &8625944046438549484
 GameObject:
   m_ObjectHideFlags: 0

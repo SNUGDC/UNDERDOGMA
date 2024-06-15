@@ -5,9 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 // 게임 시작을 누른 후, 세이브 파일을 선택하는 메뉴에 관한 스크립트. 
-public class LoadGameSceneManager : MonoBehaviour
+public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
 {
     private string _path;
 
@@ -15,16 +16,17 @@ public class LoadGameSceneManager : MonoBehaviour
 
     [SerializeField] private Button ReturnToTitleButton;
     [SerializeField] private GameObject Cursor;
+    [SerializeField] private GameObject DeletePanel;
 
-    private int selectedSaveFileNum;
+    public int _selectedSaveFileNum;
     private List<Vector3> cursorPositions = new List<Vector3>
     {
         new Vector3(-502, 220, 0),
-        new Vector3(0, 220, 0),
-        new Vector3(502, 220, 0)
+        new Vector3(-502, 0, 0),
+        new Vector3(-502, -220, 0)
     };
 
-    private bool isCursorOnDeleteButton = false;
+    public bool isCursorOnDeleteButton = false;
 
     void Start()
     {
@@ -57,68 +59,62 @@ public class LoadGameSceneManager : MonoBehaviour
             int index = i;
 
             SaveFileButtons[i].GetComponent<Button>().onClick.AddListener(() => StartGame(index));
+            SaveFileButtons[i].Init(index);
         }
 
         // 게임 시작 화면으로 되돌아가는 버튼을 누르면 GameStartMenu로 돌아간다.
         ReturnToTitleButton.onClick.AddListener(returnToTitle);
 
-        selectedSaveFileNum = -1;
-        Cursor.transform.position = cursorPositions[0];
+        _selectedSaveFileNum = 0;
+        Cursor.transform.localPosition = cursorPositions[0];
 
         SaveFileButtons[0].ToggleDeleteMenu(true);
         SaveFileButtons[1].ToggleDeleteMenu(false);
         SaveFileButtons[2].ToggleDeleteMenu(false);
+
+        DeletePanel.SetActive(false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
-            if (selectedSaveFileNum > 0)
+            if (_selectedSaveFileNum < 2)
             {
-                if (isCursorOnDeleteButton == true)
-                {
-                    isCursorOnDeleteButton = false;
-                    SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
-                    SaveFileButtons[selectedSaveFileNum].ToggleDeleteMenu(false);
-                }
-                selectedSaveFileNum--;
-                Cursor.transform.DOMove(cursorPositions[selectedSaveFileNum], 0.2f);
+                CursorMove(_selectedSaveFileNum, _selectedSaveFileNum + 1, ref isCursorOnDeleteButton);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
-            if (selectedSaveFileNum < 2)
+            if (_selectedSaveFileNum > 0)
             {
-                if (isCursorOnDeleteButton == true)
-                {
-                    isCursorOnDeleteButton = false;
-                    SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
-                    SaveFileButtons[selectedSaveFileNum].ToggleDeleteMenu(false);
-                }
-                selectedSaveFileNum++;
-                Cursor.transform.DOMove(cursorPositions[selectedSaveFileNum], 0.2f);
+                CursorMove(_selectedSaveFileNum, _selectedSaveFileNum - 1, ref isCursorOnDeleteButton);
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
             isCursorOnDeleteButton = true;
-            SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(true);
+            SaveFileButtons[_selectedSaveFileNum].HoverDeleteMenu(true);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
             isCursorOnDeleteButton = false;
-            SaveFileButtons[selectedSaveFileNum].HoverDeleteMenu(false);
+            SaveFileButtons[_selectedSaveFileNum].HoverDeleteMenu(false);
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
             if (isCursorOnDeleteButton == true)
             {
-
+                DeletePanel.SetActive(true);
+                GameObject clonedSaveFileButtonObject = Instantiate(SaveFileButtons[_selectedSaveFileNum].gameObject, SaveFileButtons[_selectedSaveFileNum].transform.position, Quaternion.identity);
+                clonedSaveFileButtonObject.transform.SetParent(DeletePanel.transform);
+                clonedSaveFileButtonObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.OutQuint);
+                clonedSaveFileButtonObject.transform.DOLocalMove(new Vector3(-1f, -10f, 0), 0.2f).SetEase(Ease.OutQuint);
+                clonedSaveFileButtonObject.GetComponent<SaveFileButton>().ToggleDeleteMenu(false);
             }
             else
             {
-                StartGame(selectedSaveFileNum);
+                StartGame(_selectedSaveFileNum);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
@@ -177,6 +173,21 @@ public class LoadGameSceneManager : MonoBehaviour
         // 2. 기본 업적 데이터를 복사해주고
         await Extensions.CopyAsync(Application.streamingAssetsPath + "/Data/Achievement/DefaultAchievementData.json",
         Application.streamingAssetsPath + string.Format("/Data/Achievement/AchievementData{0}.json", saveFileNum));
+    }
+
+    public void CursorMove(int selectedSaveFileNum, int targetSaveFileNum, ref bool isCursorOnDeleteButton)
+    {
+        if (isCursorOnDeleteButton == true)
+        {
+            isCursorOnDeleteButton = false;
+        }
+
+        SaveFileButtons[selectedSaveFileNum].ToggleDeleteMenu(false);
+        SaveFileButtons[targetSaveFileNum].ToggleDeleteMenu(true);
+
+        Cursor.transform.DOLocalMove(cursorPositions[targetSaveFileNum], 0.2f);
+
+        _selectedSaveFileNum = targetSaveFileNum;
     }
 
     // 게임 시작 화면으로 되돌아가는 버튼. 
