@@ -17,7 +17,7 @@ public struct Achievement
     public int IconImage;
 }
 
-public class AchievementManager : MonoBehaviour
+public class AchievementManager : Singleton<AchievementManager>
 {
     public Achievement[] achievements;
 
@@ -31,5 +31,23 @@ public class AchievementManager : MonoBehaviour
 
         // 전역 액세스 설정
         SteamAchievements.Instance.SetAchievements(achievements);
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            SteamAchievements.Instance.SetAchievement("NEW_ACHIEVEMENT_1_2");
+        }
+    }
+
+    public void KillFiveEnemies(int killCount)
+    {
+        Debug.Log("killcount : " + killCount);
+        SteamAchievements.Instance.ResetAllAchievements();
+        if (killCount >= 5)
+        {
+            SteamAchievements.Instance.SetAchievement("NEW_ACHIEVEMENT_1_1");
+        }
     }
 }

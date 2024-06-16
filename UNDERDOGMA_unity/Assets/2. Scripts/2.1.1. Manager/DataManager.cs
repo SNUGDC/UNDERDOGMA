@@ -26,8 +26,8 @@ public class DataManager : Singleton<DataManager>
     // 세이브파일 로드 시 불러와야 하는 데이터 등은 여기에서 부른다.
     public void LoadAllData(int saveFileNum)
     {
-        LoadGameData(saveFileNum);
-        LoadAchievementData(saveFileNum);
+        _gameData = LoadGameData(saveFileNum);
+        _achievementData = LoadAchievementData(saveFileNum);
     }
 
     public void SaveGameData(int saveFileNum)

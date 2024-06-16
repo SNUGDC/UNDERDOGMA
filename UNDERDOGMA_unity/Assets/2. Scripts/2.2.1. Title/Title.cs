@@ -28,6 +28,25 @@ public class Title : MonoBehaviour
         SoundManager.Instance.PlayBgm(true);
 
         _selectedIndex = 0;
+
+        startButton.onClick.AddListener(() =>
+        {
+            _selectedIndex = 0;
+            HighlightButton();
+            startButton.GetComponent<Buttons>().GoToLoadGameScene();
+        });
+        creditsButton.onClick.AddListener(() =>
+        {
+            _selectedIndex = 1;
+            HighlightButton();
+            creditsButton.GetComponent<Buttons>().GoToCredit();
+        });
+        exitButton.onClick.AddListener(() =>
+        {
+            _selectedIndex = 2;
+            HighlightButton();
+            exitButton.GetComponent<Buttons>().ExitGame();
+        });
     }
 
     void Update()

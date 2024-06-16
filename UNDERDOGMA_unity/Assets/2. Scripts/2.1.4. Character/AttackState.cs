@@ -18,6 +18,9 @@ public class AttackState : BaseState
     {
         // 1. 캐릭터가 공격하는 애니메이션을 보여주고, 캐릭터의 체력을 변화시킨다. 
         _character.EnqueueCoroutine(_character.CharacterAttack(_targetPosition));
+        DataManager.Instance.AchievementData.KillCount++;
+        DataManager.Instance.SaveAchievementData(GameManager.Instance.SaveFileNum);
+        AchievementManager.Instance.KillFiveEnemies(DataManager.Instance.AchievementData.KillCount);
     }
 
     public override void OnStateUpdate()

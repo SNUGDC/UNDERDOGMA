@@ -43,7 +43,7 @@ public class Buttons : MonoBehaviour
     public void ReturnToMainScreen()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("GameStart");
+        SceneManager.LoadScene("Title");
     }
 
     public void GoToCredit()

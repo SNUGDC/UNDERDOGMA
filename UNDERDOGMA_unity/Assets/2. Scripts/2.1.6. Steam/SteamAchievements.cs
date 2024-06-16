@@ -79,6 +79,7 @@ public class SteamAchievements : MonoBehaviour
     {
         if ((ulong)SteamUtils.GetAppID() == pCallback.m_nGameID)
         {
+            Debug.Log("m_eResult: " + pCallback.m_eResult + "k_EResultOK: " + EResult.k_EResultOK);
             if (pCallback.m_eResult == EResult.k_EResultOK)
             {
                 Debug.Log("Received stats and achievements from Steam");
@@ -122,6 +123,14 @@ public class SteamAchievements : MonoBehaviour
         if ((ulong)SteamUtils.GetAppID() == pCallback.m_nGameID)
         {
             Debug.Log("Stored Achievement for Steam");
+        }
+    }
+
+    public void ResetAllAchievements()
+    {
+        if (initialized)
+        {
+            SteamUserStats.ResetAllStats(true);
         }
     }
 }
