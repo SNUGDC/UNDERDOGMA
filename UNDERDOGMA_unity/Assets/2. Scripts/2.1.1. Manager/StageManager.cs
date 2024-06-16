@@ -134,12 +134,14 @@ public class StageManager : MonoBehaviour
                 pauseCanvas.SetActive(false);
                 isPauseCanvasOpened = false;
                 Time.timeScale = 1f;
+                GameManager.Instance.isTimerRunning = true;
             }
             else
             {
                 pauseCanvas.SetActive(true);
                 isPauseCanvasOpened = true;
                 Time.timeScale = 0;
+                GameManager.Instance.isTimerRunning = false;
             }
         }
 

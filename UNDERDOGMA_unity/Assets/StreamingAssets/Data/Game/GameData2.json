@@ -1,0 +1,22 @@
+{
+    "HighestClearedWorld": 0,
+    "PlayTime": 0,
+    "NormalStageCleared": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "HardStageCleared": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "CurrentWorld": 0,
+    "CurrentStage": 0
+}

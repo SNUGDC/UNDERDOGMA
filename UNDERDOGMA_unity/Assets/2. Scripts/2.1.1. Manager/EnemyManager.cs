@@ -12,6 +12,11 @@ public class EnemyManager : Singleton<EnemyManager>
     public Dictionary<Vector2Int, Vector2Int> ChaserMoveDictionary = new Dictionary<Vector2Int, Vector2Int>();
     public List<Vector2Int> DeathAngelPositionList = new List<Vector2Int>();
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void EnemyDeath(Vector2Int targetPosition, bool deathByExecution)
     {
         Coroutine EnemyDeathCoroutine = null;

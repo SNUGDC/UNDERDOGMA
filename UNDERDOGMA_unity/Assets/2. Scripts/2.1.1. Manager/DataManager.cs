@@ -12,6 +12,11 @@ public class DataManager : Singleton<DataManager>
     private AchievementData _achievementData;
     public AchievementData AchievementData => _achievementData;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // 게임 시작과 동시에 불러와야 하는 데이터들은 여기에서 부른다. 
     void Start()
     {

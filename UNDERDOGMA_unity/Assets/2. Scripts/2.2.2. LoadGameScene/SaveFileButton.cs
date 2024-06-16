@@ -5,16 +5,22 @@ using UnityEngine.UI;
 
 public class SaveFileButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] TextMeshProUGUI NewGameText;
     [SerializeField] TextMeshProUGUI ChapterText;
     [SerializeField] TextMeshProUGUI PlayTime;
     [SerializeField] GameObject ConnectBar;
-    [SerializeField] Button DeleteButton;
+    [SerializeField] public DeleteButton DeleteButton;
 
     int saveFileNum;
 
     public void Init(int saveFileNum)
     {
         this.saveFileNum = saveFileNum;
+    }
+
+    public void SetNewGameText(string text)
+    {
+        NewGameText.SetText(text);
     }
 
     public void SetChapterText(string text)
@@ -31,18 +37,6 @@ public class SaveFileButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         ConnectBar.SetActive(isOn);
         DeleteButton.gameObject.SetActive(isOn);
-    }
-
-    public void HoverDeleteMenu(bool isOn)
-    {
-        if (isOn)
-        {
-            DeleteButton.GetComponentInChildren<TextMeshProUGUI>().transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
-        }
-        else
-        {
-            DeleteButton.GetComponentInChildren<TextMeshProUGUI>().transform.localScale = new Vector3(1, 1, 1);
-        }
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)

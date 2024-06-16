@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.Tracing;
+using Sirenix.OdinInspector;
 using Steamworks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 // 게임 매니저에서는 전반적으로 게임 진행과 관련된 것들을 컨트롤한다.
@@ -55,9 +51,12 @@ public class GameManager : Singleton<GameManager>
 
     public Achievement[] achievements;
 
-    void Awake()
+    public bool isTimerRunning = false;
+    public float saveTimeInterval;
+
+    protected override void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        base.Awake();
 
         // 기본 언어는 한국어로 설정해준다.
         _language = Language.Korean;
@@ -83,6 +82,22 @@ public class GameManager : Singleton<GameManager>
     public void Update()
     {
         SteamAPI.RunCallbacks();
+
+        if (isTimerRunning == true)
+        {
+            DataManager.Instance.GameData.PlayTime += Time.deltaTime;
+        }
+
+        Debug.Log("play Time: " + saveTimeInterval);
+
+        // 1분마다 게임 데이터를 저장. 
+        if (saveTimeInterval >= 60)
+        {
+            DataManager.Instance.SaveGameData(saveFileNum);
+            saveTimeInterval = 0;
+        }
+
+        saveTimeInterval += Time.deltaTime;
     }
 
     /* 해상도 설정하는 함수 */

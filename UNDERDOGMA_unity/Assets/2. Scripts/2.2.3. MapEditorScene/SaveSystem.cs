@@ -15,6 +15,11 @@ public class SaveSystem : Singleton<SaveSystem>
     public TMP_InputField inputField_CharacterHeart;
     public TMP_InputField inputField_StageNum;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))

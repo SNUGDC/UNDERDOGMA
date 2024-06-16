@@ -10,6 +10,11 @@ public class MeatManager : Singleton<MeatManager>
     public Queue<Coroutine> MeatEatCoroutineQueue = new Queue<Coroutine>();
     public Dictionary<Vector2Int, GameObject> GameObjectDictionary => StageManager.Instance.GameObjectDictionary;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void EatMeat(Vector2Int targetPosition)
     {
         Coroutine MeatEatCoroutine = null;

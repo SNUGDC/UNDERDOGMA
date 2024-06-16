@@ -23,13 +23,9 @@ public class SoundManager : Singleton<SoundManager>
 
     public enum Sfx { Eat, Enemy_Attack, Execute, Meat, Move, Music, Reset, Title, UI_Toggle }
 
-    public void Awake()
+    protected override void Awake()
     {
-        if (SoundManager.Instance != this)
-            Destroy(gameObject);
-
-        DontDestroyOnLoad(gameObject);
-
+        base.Awake();
         Init();
         PlayBgm(true);
     }

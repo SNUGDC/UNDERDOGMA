@@ -257,6 +257,11 @@ public class StageData
 
 public class StageDataLoader : Singleton<StageDataLoader>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void SaveStageData(StageData holder, string dataName)
     {
         string path = Application.streamingAssetsPath;

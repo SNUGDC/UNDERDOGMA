@@ -10,6 +10,11 @@ public class BallManager : Singleton<BallManager>
     public Queue<Coroutine> KickCoroutineQueue = new Queue<Coroutine>();
     public Dictionary<Vector2Int, GameObject> GameObjectDictionary => StageManager.Instance.GameObjectDictionary;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void Kick(Vector2Int targetPosition, KeyCode key)
     {
         Coroutine KickCoroutine = null;

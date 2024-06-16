@@ -6,10 +6,20 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.EventSystems;
+using UnityEditor.Rendering.Universal;
 
 // 게임 시작을 누른 후, 세이브 파일을 선택하는 메뉴에 관한 스크립트. 
-public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
+public class LoadGameSceneManager : MonoBehaviour
 {
+    // 싱글톤 패턴. 인스턴스를 하나만 만들어서 사용한다. 
+    private static LoadGameSceneManager _instance;
+
+    public static LoadGameSceneManager Instance
+    {
+        get => _instance;
+        set => _instance = value;
+    }
+
     private string _path;
 
     [SerializeField] private List<SaveFileButton> SaveFileButtons;
@@ -17,6 +27,10 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
     [SerializeField] private Button ReturnToTitleButton;
     [SerializeField] private GameObject Cursor;
     [SerializeField] private GameObject DeletePanel;
+    [SerializeField] private Button DeletePanelBackGround;
+    [SerializeField] private Button DeleteConfirmButton;
+    [SerializeField] private Button DeleteCancelButton;
+    GameObject clonedSaveFileButtonObject;
 
     public int _selectedSaveFileNum;
     private List<Vector3> cursorPositions = new List<Vector3>
@@ -27,6 +41,21 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
     };
 
     public bool isCursorOnDeleteButton = false;
+    public bool isDeleteMenuPopUp = false;
+
+    public void Awake()
+    {
+        if (_instance == null)
+        {
+            Debug.Log("instance is null");
+            _instance = this;
+        }
+        else
+        {
+            Debug.Log("instance is not null");
+            Destroy(this.gameObject);
+        }
+    }
 
     void Start()
     {
@@ -45,6 +74,7 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
             // 만약 데이터가 없으면 공백으로 둔다.
             if (!fileInfo.Exists)
             {
+                SaveFileButtons[i].SetNewGameText("Empty Slot");
                 SaveFileButtons[i].SetChapterText("");
                 SaveFileButtons[i].SetPlayTime("");
             }
@@ -52,6 +82,7 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
             else
             {
                 GameData gameData = GameDataLoader.Instance._load(string.Format("GameData{0}", i));
+                SaveFileButtons[i].SetNewGameText("");
                 SaveFileButtons[i].SetChapterText("Chapter " + gameData.HighestWorldCleared);
                 SaveFileButtons[i].SetPlayTime("Play Time: " + gameData.PlayTime);
             }
@@ -73,59 +104,87 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
         SaveFileButtons[2].ToggleDeleteMenu(false);
 
         DeletePanel.SetActive(false);
+        DeletePanelBackGround.onClick.AddListener(() =>
+        {
+            DeleteMenuPopUp(false);
+        });
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        if (isDeleteMenuPopUp == true)
         {
-            if (_selectedSaveFileNum < 2)
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
-                CursorMove(_selectedSaveFileNum, _selectedSaveFileNum + 1, ref isCursorOnDeleteButton);
+                hoverDeleteConfirmButton();
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
+                hoverDeleteCancelButton();
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (DeleteConfirmButton.transform.localScale.x == 1.1f)
+                {
+                    DeleteGame(_selectedSaveFileNum);
+                }
+                else
+                {
+                    DeleteMenuPopUp(false);
+                }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        else
         {
-            if (_selectedSaveFileNum > 0)
+
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
-                CursorMove(_selectedSaveFileNum, _selectedSaveFileNum - 1, ref isCursorOnDeleteButton);
+                if (_selectedSaveFileNum < 2)
+                {
+                    CursorMove(_selectedSaveFileNum, _selectedSaveFileNum + 1, ref isCursorOnDeleteButton);
+                }
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-        {
-            isCursorOnDeleteButton = true;
-            SaveFileButtons[_selectedSaveFileNum].HoverDeleteMenu(true);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-        {
-            isCursorOnDeleteButton = false;
-            SaveFileButtons[_selectedSaveFileNum].HoverDeleteMenu(false);
-        }
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            if (isCursorOnDeleteButton == true)
+            else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                DeletePanel.SetActive(true);
-                GameObject clonedSaveFileButtonObject = Instantiate(SaveFileButtons[_selectedSaveFileNum].gameObject, SaveFileButtons[_selectedSaveFileNum].transform.position, Quaternion.identity);
-                clonedSaveFileButtonObject.transform.SetParent(DeletePanel.transform);
-                clonedSaveFileButtonObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.OutQuint);
-                clonedSaveFileButtonObject.transform.DOLocalMove(new Vector3(-1f, -10f, 0), 0.2f).SetEase(Ease.OutQuint);
-                clonedSaveFileButtonObject.GetComponent<SaveFileButton>().ToggleDeleteMenu(false);
+                if (_selectedSaveFileNum > 0)
+                {
+                    CursorMove(_selectedSaveFileNum, _selectedSaveFileNum - 1, ref isCursorOnDeleteButton);
+                }
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
-                StartGame(_selectedSaveFileNum);
+                isCursorOnDeleteButton = true;
+                SaveFileButtons[_selectedSaveFileNum].DeleteButton.HoverDeleteMenu(true);
             }
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            returnToTitle();
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
+                isCursorOnDeleteButton = false;
+                SaveFileButtons[_selectedSaveFileNum].DeleteButton.HoverDeleteMenu(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (isCursorOnDeleteButton == true)
+                {
+                    DeleteMenuPopUp(true);
+                }
+                else
+                {
+                    StartGame(_selectedSaveFileNum);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                returnToTitle();
+            }
         }
     }
 
     // 기존에 존재하는 게임 데이터를 삭제하는 경우.
     public void DeleteGame(int saveFileNum)
     {
+        Debug.Log("deleteGame: " + saveFileNum);
         // 세이브파일의 모든 데이터에 대해 경로를 지정하고
         List<string> paths = new List<string>
         {
@@ -143,6 +202,12 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
                 File.Delete(path);
             }
         }
+
+        SaveFileButtons[saveFileNum].SetNewGameText("Empty Slot");
+        SaveFileButtons[saveFileNum].SetChapterText("");
+        SaveFileButtons[saveFileNum].SetPlayTime("");
+
+        DeleteMenuPopUp(false);
     }
 
     public async void StartGame(int saveFileNum)
@@ -159,6 +224,7 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
         }
 
         GameManager.Instance.SaveFileNum = saveFileNum;
+        GameManager.Instance.isTimerRunning = true;
         DataManager.Instance.LoadAllData(saveFileNum);
         LoadingManager.Instance.LoadScene("Stage", false, false, 1, 1);
     }
@@ -188,6 +254,55 @@ public class LoadGameSceneManager : Singleton<LoadGameSceneManager>
         Cursor.transform.DOLocalMove(cursorPositions[targetSaveFileNum], 0.2f);
 
         _selectedSaveFileNum = targetSaveFileNum;
+    }
+
+    public void DeleteMenuPopUp(bool isOn)
+    {
+        DeletePanel.SetActive(isOn);
+
+        if (isOn == true)
+        {
+            clonedSaveFileButtonObject = Instantiate(SaveFileButtons[_selectedSaveFileNum].gameObject, SaveFileButtons[_selectedSaveFileNum].transform.position, Quaternion.identity);
+            clonedSaveFileButtonObject.transform.SetParent(DeletePanel.transform);
+            clonedSaveFileButtonObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f).SetEase(Ease.OutQuint);
+            clonedSaveFileButtonObject.transform.DOLocalMove(new Vector3(-1f, -10f, 0), 0.2f).SetEase(Ease.OutQuint);
+            clonedSaveFileButtonObject.GetComponent<SaveFileButton>().ToggleDeleteMenu(false);
+
+            Debug.Log("saveFileNum: " + _selectedSaveFileNum);
+
+            int saveFileNum = _selectedSaveFileNum;
+            DeleteConfirmButton.onClick.AddListener(() =>
+            {
+                DeleteGame(saveFileNum);
+            });
+            DeleteCancelButton.onClick.AddListener(() =>
+            {
+                DeleteMenuPopUp(false);
+            });
+        }
+        else
+        {
+            clonedSaveFileButtonObject.transform.DOScale(new Vector3(1.0f, 1.0f, 1.0f), 0.2f).SetEase(Ease.OutQuint);
+            clonedSaveFileButtonObject.transform.DOLocalMove(new Vector3(-1f, -10f, 0) + new Vector3(0, -230f, 0f) * (_selectedSaveFileNum - 1), 0.2f).SetEase(Ease.OutQuint);
+            Destroy(clonedSaveFileButtonObject, 0);
+
+            DeleteConfirmButton.onClick.RemoveAllListeners();
+            DeleteCancelButton.onClick.RemoveAllListeners();
+        }
+
+        isDeleteMenuPopUp = isOn;
+    }
+
+    public void hoverDeleteConfirmButton()
+    {
+        DeleteConfirmButton.transform.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.2f).SetEase(Ease.OutQuint);
+        DeleteCancelButton.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.2f).SetEase(Ease.OutQuint);
+    }
+
+    public void hoverDeleteCancelButton()
+    {
+        DeleteConfirmButton.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.2f).SetEase(Ease.OutQuint);
+        DeleteCancelButton.transform.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.2f).SetEase(Ease.OutQuint);
     }
 
     // 게임 시작 화면으로 되돌아가는 버튼. 

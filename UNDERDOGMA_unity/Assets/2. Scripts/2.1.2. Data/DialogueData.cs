@@ -24,6 +24,11 @@ public class DialogueData
 
 public class DialogueDataLoader : Singleton<DialogueDataLoader>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     public void SaveDialogueData(DialogueData holder, string dataName)
     {
         string path = Application.streamingAssetsPath;

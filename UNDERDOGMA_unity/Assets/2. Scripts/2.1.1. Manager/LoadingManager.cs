@@ -19,9 +19,9 @@ public class LoadingManager : Singleton<LoadingManager>
     private GameObject executionManager;
     private GameObject dialogueManager;
 
-    public void Awake()
+    protected override void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        base.Awake();
     }
 
     // 다른 씬으로 이동하는 함수. 

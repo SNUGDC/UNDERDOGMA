@@ -421,8 +421,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -493,6 +493,8 @@ GameObject:
   - component: {fileID: 8625944046065018215}
   - component: {fileID: 8625944046065018214}
   - component: {fileID: 8625944046065018213}
+  - component: {fileID: 4082309526003381321}
+  - component: {fileID: 5081015533852934853}
   m_Layer: 5
   m_Name: DeleteButton
   m_TagString: Untagged
@@ -603,6 +605,44 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4082309526003381321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625944046065018211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529ea5d49d15ce04aa705f969c211d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &5081015533852934853
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8625944046065018211}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &8625944046240258312
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,10 +784,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0055589617f0944095c40b6afd026d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NewGameText: {fileID: 8625944046004208752}
   ChapterText: {fileID: 8625944046568226955}
   PlayTime: {fileID: 8625944045540217968}
   ConnectBar: {fileID: 2190874074712505445}
-  DeleteButton: {fileID: 8625944046065018213}
+  DeleteButton: {fileID: 4082309526003381321}
 --- !u!61 &7027140197359974371
 BoxCollider2D:
   m_ObjectHideFlags: 0

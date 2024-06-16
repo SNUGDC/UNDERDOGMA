@@ -23,6 +23,11 @@ public class AchievementData
 
 public class AchievementDataLoader : Singleton<AchievementDataLoader>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // 게임 데이터를 저장한다.
     public bool saveData(AchievementData holder, string dataName)
     {

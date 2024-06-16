@@ -14,8 +14,8 @@ public class GameData
         set => _highestWorldCleared = value;
     }
 
-    [JsonIgnore] private int _playTime;
-    public int PlayTime
+    [JsonIgnore] private float _playTime;
+    public float PlayTime
     {
         get => _playTime;
         set => _playTime = value;
@@ -50,7 +50,7 @@ public class GameData
         set => _currentStage = value;
     }
 
-    public GameData(int highestWorldCleared, int playTime, List<int> normalStageCleared, List<int> hardStageCleared, int currentWorld, int currentStage)
+    public GameData(int highestWorldCleared, float playTime, List<int> normalStageCleared, List<int> hardStageCleared, int currentWorld, int currentStage)
     {
         _highestWorldCleared = highestWorldCleared;
         _playTime = playTime;
@@ -63,6 +63,11 @@ public class GameData
 
 public class GameDataLoader : Singleton<GameDataLoader>
 {
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
     // 게임 데이터를 저장한다.
     public bool saveData(GameData holder, string dataName)
     {
