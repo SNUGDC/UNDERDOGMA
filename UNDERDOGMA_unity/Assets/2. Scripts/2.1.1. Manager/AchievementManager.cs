@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Steamworks;
 
 public enum EAchievements
 {
@@ -35,18 +36,25 @@ public class AchievementManager : Singleton<AchievementManager>
 
     public void Update()
     {
+        if (SteamManager.Initialized)
+        {
+            SteamAPI.RunCallbacks();
+        }
+
         if (Input.GetKeyDown(KeyCode.H))
         {
+            SteamAchievements.Instance.ResetAllAchievements();
+
             SteamAchievements.Instance.SetAchievement("NEW_ACHIEVEMENT_1_2");
         }
     }
 
     public void KillFiveEnemies(int killCount)
     {
-        Debug.Log("killcount : " + killCount);
-        SteamAchievements.Instance.ResetAllAchievements();
         if (killCount >= 5)
         {
+            SteamAchievements.Instance.ResetAllAchievements();
+
             SteamAchievements.Instance.SetAchievement("NEW_ACHIEVEMENT_1_1");
         }
     }

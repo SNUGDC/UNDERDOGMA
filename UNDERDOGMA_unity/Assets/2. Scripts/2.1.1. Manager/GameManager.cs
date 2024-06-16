@@ -49,8 +49,6 @@ public class GameManager : Singleton<GameManager>
     public bool FromStageSelector = false;
     public bool FromMapEditor = false;
 
-    public Achievement[] achievements;
-
     public bool isTimerRunning = false;
     public float saveTimeInterval;
 
@@ -64,15 +62,8 @@ public class GameManager : Singleton<GameManager>
         // 다이얼로그 테이블을 불러온다.
         _dialogueDataTable = new DialogueDataTable("DialogueDataTable");
         _dialogueDataTable.LoadCsv("언더독 다이얼로그 및 번역 테이블 - 다이얼로그 시트.csv");
-
-        if (SteamManager.Initialized)
-        {
-            AchievementManager achievementManager = new AchievementManager();
-            achievementManager.achievements = achievements;
-
-            SteamAchievements.Instance.SetAchievements(achievements);
-        }
     }
+
     // Start is called before the first frame update
     void Start()
     {

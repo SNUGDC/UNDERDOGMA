@@ -29,7 +29,7 @@ public class SteamAchievements : MonoBehaviour
     protected Callback<UserStatsStored_t> userStatsStored;
     protected Callback<UserAchievementStored_t> achievementStored;
 
-    private void OnEnable()
+    private SteamAchievements()
     {
         if (SteamManager.Initialized)
         {
